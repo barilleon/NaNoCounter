@@ -1,0 +1,37 @@
+th {
+  border-style: solid;
+  border-width: 1px;
+  padding: 10px;
+  text-align: center;
+}
+
+input {
+  width: 50px;
+  text-align: center;
+}
+
+.changed {
+  background-color: #eefccc;
+}
+
+table
+{
+  width: 70%;
+  margin: auto;
+}
+#instructions
+{
+  padding: 20px;
+  border-style: solid;
+  border-thickness: 5px;
+  width:70%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+#buttons
+{
+  width: 50%;
+  margin:auto;
+  text-align: center;
+}
