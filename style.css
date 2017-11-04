@@ -16,17 +16,16 @@ input {
 
 table
 {
-  width: 70%;
+  width: 60%;
   margin: auto;
 }
+
 #instructions
 {
-  padding: 20px;
-  border-style: solid;
-  border-thickness: 5px;
-  width:70%;
+  width:40%;
   margin: auto;
   margin-bottom: 20px;
+  text-align:justify;
 }
 
 #buttons

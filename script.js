@@ -3,6 +3,8 @@ var wordCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 var toggled = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var wordGoal = 50000;
 
+
+/* This loads the state from the last cookies saved */
 function loadCookies() {
   if (getCookie("wordCount"))
   {
@@ -10,8 +12,12 @@ function loadCookies() {
     // console.log(getCookie("wordCount"));
     wordCount = getCookie("wordCount").split(',').map(Number);
     toggled = getCookie("toggled").split(',').map(Number);
-    wordGoal = getCookie("wordCount");
+    wordGoal = Number(getCookie("wordCount"));
 
+    // Set Word Goal: 
+    $("#wordGoal").val(wordGoal);
+
+    // Make sure all locked cells stay locked.
     for (var i = 0; i < toggled.length; i++) {
       if (toggled[i] == 1) {
         var selector = "#" + (i+ 1).toString();
@@ -22,19 +28,15 @@ function loadCookies() {
 
 }
 
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    console.log(getCookie(cname));
-}
-
 function setCookies() {
   setCookie("wordCount", wordCount.toString(), 30);
   setCookie("toggled", toggled.toString(), 30);
   setCookie("wordGoal", wordGoal.toString(), 30);
 }
+
+
+/* These two functions were taken from w3schools 
+   Because, well, they work */
 
 function getCookie(cname) {
     var name = cname + "=";
@@ -50,6 +52,14 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    console.log(getCookie(cname));
 }
 
 function updateWords(n) {
@@ -105,7 +115,11 @@ $(document).ready(function() {
   loadCookies();
 
   for (var i = 0; i < wordCount.length; i++) {
+
+    // Set the number of the date
     $("#" + (i + 1).toString() + " div").text(i + 1);
+
+    // Set the saved word count.
     $("#" + (i + 1).toString() + " input").val(wordCount[i]);
   }
 
@@ -123,7 +137,7 @@ $(document).ready(function() {
 
 
   // When you click on a column you should lock/unlock it
-  $('th').on('click', function() {
+  $('.clickable').on('click', function() {
     $(this).toggleClass("changed");
     var day = $(this).attr("id");
     toggled[Number(day) - 1] = (toggled[Number(day)] + 1) % 2;
@@ -135,6 +149,6 @@ $(document).ready(function() {
   $('#reset').click(resetToZero);
 
 
-  adjustCount();
+  // adjustCount();
 
 });
