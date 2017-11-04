@@ -3,13 +3,21 @@ var wordCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 var toggled = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var wordGoal = 50000;
 
-/* function loadCookies() {
+function loadCookies() {
   if (getCookie("wordCount"))
   {
-    console.log("We have a cookie!");
-    wordCount = getCookie("wordCount".split(','));
-    toggled = getCookie("toggled".split(','));
+    // console.log("We have a cookie!");
+    // console.log(getCookie("wordCount"));
+    wordCount = getCookie("wordCount").split(',').map(Number);
+    toggled = getCookie("toggled").split(',').map(Number);
     wordGoal = getCookie("wordCount");
+
+    for (var i = 0; i < toggled.length; i++) {
+      if (toggled[i] == 1) {
+        var selector = "#" + (i+ 1).toString();
+        $(selector).addClass("changed");
+      }
+    }
   }
 
 }
@@ -19,6 +27,13 @@ function setCookie(cname, cvalue, exdays) {
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    console.log(getCookie(cname));
+}
+
+function setCookies() {
+  setCookie("wordCount", wordCount.toString(), 30);
+  setCookie("toggled", toggled.toString(), 30);
+  setCookie("wordGoal", wordGoal.toString(), 30);
 }
 
 function getCookie(cname) {
@@ -35,7 +50,7 @@ function getCookie(cname) {
         }
     }
     return "";
-}*/
+}
 
 function updateWords(n) {
   for (var i = 0; i < toggled.length; i++) {
@@ -71,50 +86,51 @@ function adjustCount() {
   }
 
   updateWords(wordSplit);
-  /* console.log("Setting cookies: ");
-  setCookie("wordCount", wordCount.toString(), 30);
-  console.log(wordCount.toString());
-  setCookie("toggled", toggled.toString(), 30);
-  console.log(toggled.toString());
-  setCookie("wordGoal", wordGoal);*/
+  setCookies();
 }
 
 function resetToZero() {
   wordCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   toggled = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  setCookies();
   $("th").removeClass("changed");
   adjustCount();
 }
 
 
-
-
 $(document).ready(function() {
 
-  // loadCookies();
+  loadCookies();
 
   for (var i = 0; i < wordCount.length; i++) {
-    console.log(wordCount[i]);
     $("#" + (i + 1).toString() + " div").text(i + 1);
-    $("#" + (i + 1).toString() + " input").val(wordCount[i + 1]);
+    $("#" + (i + 1).toString() + " input").val(wordCount[i]);
   }
 
+  // On changing the value of a word count...
   $('.change').on('change', function() {
+
       // alert( this.value );
       $(this).parent().addClass("changed");
       var day = $(this).parent().attr("id");
 
       wordCount[Number(day) - 1] = Number($(this).val());
       toggled[Number(day) - 1] = 1;
+      setCookies();
     })
-    // When you click on a column you should lock/unlock it
+
+
+  // When you click on a column you should lock/unlock it
   $('th').on('click', function() {
     $(this).toggleClass("changed");
     var day = $(this).attr("id");
-    toggled[Number(day) - 1] = (toggled[Number(day)] - 1) % 2;
+    toggled[Number(day) - 1] = (toggled[Number(day)] + 1) % 2;
+    setCookies();
   })
 
+  // Setting Recalculate and Reset buttons
   $('#recalculate').click(adjustCount);
   $('#reset').click(resetToZero);
 
