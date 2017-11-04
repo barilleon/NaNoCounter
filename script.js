@@ -12,7 +12,7 @@ function loadCookies() {
     // console.log(getCookie("wordCount"));
     wordCount = getCookie("wordCount").split(',').map(Number);
     toggled = getCookie("toggled").split(',').map(Number);
-    wordGoal = Number(getCookie("wordCount"));
+    wordGoal = Number(getCookie("wordGoal"));
 
     // Set Word Goal: 
     $("#wordGoal").val(wordGoal);
